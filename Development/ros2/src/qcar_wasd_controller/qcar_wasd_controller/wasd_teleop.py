@@ -2,7 +2,7 @@ import rclpy
 from rclpy.node import Node
 import sys, select, termios, tty
 from qcar2_interfaces.msg import MotorCommands
-
+# test 
 # Key mappings
 MOVE_BINDINGS = {
     'w': (0.0, 0.5),  # Forward
