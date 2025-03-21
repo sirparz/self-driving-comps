@@ -1,2 +1,0 @@
-[console_scripts]
-wasd_teleop = qcar_wasd_controller.wasd_teleop:main

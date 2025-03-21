@@ -1,1 +1,0 @@
-Invoking command in '/workspaces/isaac_ros-dev/ros2/build/qcar2_interfaces': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/workspaces/isaac_ros-dev/ros2/install/qcar_wasd_controller:/opt/ros/humble _=/usr/bin/env /usr/bin/cmake /workspaces/isaac_ros-dev/ros2/src/qcar2_interfaces -DCMAKE_INSTALL_PREFIX=/workspaces/isaac_ros-dev/ros2/install/qcar2_interfaces
