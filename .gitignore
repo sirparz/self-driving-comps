@@ -1,9 +1,8 @@
-# Ignore everything by default
-*
+# Ignore these specific folders
+backup/
+dev/
+isaac_ros_common/
 
-# But allow these specific items
-!.gitignore
-!README.md
-!Development/*
+# Ignore everything in `docker/` except `Dockerfile.quanser`
+docker/*
 !docker/Dockerfile.quanser
-

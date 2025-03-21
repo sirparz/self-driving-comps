@@ -1,0 +1,50 @@
+[0.186s] Invoking command in '/workspaces/isaac_ros-dev/ros2/build/qcar2_interfaces': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/workspaces/isaac_ros-dev/ros2/install/qcar_wasd_controller:/opt/ros/humble _=/usr/bin/env /usr/bin/cmake --build /workspaces/isaac_ros-dev/ros2/build/qcar2_interfaces -- -j16 -l16
+[0.234s] [35m[1mConsolidate compiler generated dependencies of target qcar2_interfaces__rosidl_generator_c[0m
+[0.251s] [ 10%] Built target qcar2_interfaces__rosidl_generator_c
+[0.252s] [ 12%] Built target qcar2_interfaces__cpp
+[0.255s] [ 12%] Built target ament_cmake_python_copy_qcar2_interfaces
+[0.270s] [ 25%] [34m[1mGenerating C++ type support for eProsima Fast-RTPS[0m
+[0.270s] [ 25%] [34m[1mGenerating C type support dispatch for ROS interfaces[0m
+[0.270s] [ 25%] [34m[1mGenerating C++ introspection for ROS interfaces[0m
+[0.270s] [ 25%] [34m[1mGenerating C type support for eProsima Fast-RTPS[0m
+[0.270s] [ 25%] [34m[1mGenerating C introspection for ROS interfaces[0m
+[0.270s] [ 28%] [34m[1mGenerating C++ type support dispatch for ROS interfaces[0m
+[0.433s] Traceback (most recent call last):
+[0.433s]   File "setup.py", line 1, in <module>
+[0.433s]     from setuptools import find_packages
+[0.433s]   File "/home/admin/.local/lib/python3.8/site-packages/setuptools/__init__.py", line 27, in <module>
+[0.433s]     from .dist import Distribution
+[0.433s]   File "/home/admin/.local/lib/python3.8/site-packages/setuptools/dist.py", line 30, in <module>
+[0.434s]     from . import (
+[0.434s]   File "/home/admin/.local/lib/python3.8/site-packages/setuptools/_entry_points.py", line 45, in <module>
+[0.434s]     def validate(eps: metadata.EntryPoints):
+[0.434s] AttributeError: module 'importlib_metadata' has no attribute 'EntryPoints'
+[0.460s] make[2]: *** [CMakeFiles/ament_cmake_python_build_qcar2_interfaces_egg.dir/build.make:70: CMakeFiles/ament_cmake_python_build_qcar2_interfaces_egg] Error 1
+[0.460s] make[1]: *** [CMakeFiles/Makefile2:447: CMakeFiles/ament_cmake_python_build_qcar2_interfaces_egg.dir/all] Error 2
+[0.460s] make[1]: *** Waiting for unfinished jobs....
+[0.637s] [ 33%] [32mBuilding CXX object CMakeFiles/qcar2_interfaces__rosidl_typesupport_cpp.dir/rosidl_typesupport_cpp/qcar2_interfaces/msg/boolean_leds__type_support.cpp.o[0m
+[0.638s] [ 33%] [32mBuilding CXX object CMakeFiles/qcar2_interfaces__rosidl_typesupport_cpp.dir/rosidl_typesupport_cpp/qcar2_interfaces/msg/motor_commands__type_support.cpp.o[0m
+[0.648s] [ 38%] [32mBuilding CXX object CMakeFiles/qcar2_interfaces__rosidl_typesupport_c.dir/rosidl_typesupport_c/qcar2_interfaces/msg/motor_commands__type_support.cpp.o[0m
+[0.648s] [ 38%] [32mBuilding CXX object CMakeFiles/qcar2_interfaces__rosidl_typesupport_c.dir/rosidl_typesupport_c/qcar2_interfaces/msg/boolean_leds__type_support.cpp.o[0m
+[0.667s] [ 41%] [32mBuilding CXX object CMakeFiles/qcar2_interfaces__rosidl_typesupport_fastrtps_c.dir/rosidl_typesupport_fastrtps_c/qcar2_interfaces/msg/detail/boolean_leds__type_support_c.cpp.o[0m
+[0.668s] [ 43%] [32mBuilding CXX object CMakeFiles/qcar2_interfaces__rosidl_typesupport_fastrtps_c.dir/rosidl_typesupport_fastrtps_c/qcar2_interfaces/msg/detail/motor_commands__type_support_c.cpp.o[0m
+[0.690s] [ 46%] [32mBuilding CXX object CMakeFiles/qcar2_interfaces__rosidl_typesupport_fastrtps_cpp.dir/rosidl_typesupport_fastrtps_cpp/qcar2_interfaces/msg/detail/dds_fastrtps/boolean_leds__type_support.cpp.o[0m
+[0.694s] [ 48%] [32mBuilding CXX object CMakeFiles/qcar2_interfaces__rosidl_typesupport_fastrtps_cpp.dir/rosidl_typesupport_fastrtps_cpp/qcar2_interfaces/msg/detail/dds_fastrtps/motor_commands__type_support.cpp.o[0m
+[0.711s] [ 53%] [32m[1mLinking CXX shared library libqcar2_interfaces__rosidl_typesupport_c.so[0m
+[0.711s] [ 53%] [32mBuilding C object CMakeFiles/qcar2_interfaces__rosidl_typesupport_introspection_c.dir/rosidl_typesupport_introspection_c/qcar2_interfaces/msg/detail/boolean_leds__type_support.c.o[0m
+[0.711s] [ 56%] [32mBuilding C object CMakeFiles/qcar2_interfaces__rosidl_typesupport_introspection_c.dir/rosidl_typesupport_introspection_c/qcar2_interfaces/msg/detail/motor_commands__type_support.c.o[0m
+[0.745s] [ 58%] [32mBuilding CXX object CMakeFiles/qcar2_interfaces__rosidl_typesupport_introspection_cpp.dir/rosidl_typesupport_introspection_cpp/qcar2_interfaces/msg/detail/motor_commands__type_support.cpp.o[0m
+[0.761s] [ 61%] [32mBuilding CXX object CMakeFiles/qcar2_interfaces__rosidl_typesupport_introspection_cpp.dir/rosidl_typesupport_introspection_cpp/qcar2_interfaces/msg/detail/boolean_leds__type_support.cpp.o[0m
+[0.795s] [ 64%] [32m[1mLinking C shared library libqcar2_interfaces__rosidl_typesupport_introspection_c.so[0m
+[0.795s] [ 64%] Built target qcar2_interfaces__rosidl_typesupport_c
+[0.853s] [ 64%] Built target qcar2_interfaces__rosidl_typesupport_introspection_c
+[1.068s] [ 66%] [32m[1mLinking CXX shared library libqcar2_interfaces__rosidl_typesupport_cpp.so[0m
+[1.139s] [ 66%] Built target qcar2_interfaces__rosidl_typesupport_cpp
+[1.230s] [ 69%] [32m[1mLinking CXX shared library libqcar2_interfaces__rosidl_typesupport_fastrtps_c.so[0m
+[1.365s] [ 69%] Built target qcar2_interfaces__rosidl_typesupport_fastrtps_c
+[1.384s] [ 71%] [32m[1mLinking CXX shared library libqcar2_interfaces__rosidl_typesupport_fastrtps_cpp.so[0m
+[1.417s] [ 74%] [32m[1mLinking CXX shared library libqcar2_interfaces__rosidl_typesupport_introspection_cpp.so[0m
+[1.496s] [ 74%] Built target qcar2_interfaces__rosidl_typesupport_fastrtps_cpp
+[1.524s] [ 74%] Built target qcar2_interfaces__rosidl_typesupport_introspection_cpp
+[1.524s] make: *** [Makefile:146: all] Error 2
+[1.526s] Invoked command in '/workspaces/isaac_ros-dev/ros2/build/qcar2_interfaces' returned '2': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/workspaces/isaac_ros-dev/ros2/install/qcar_wasd_controller:/opt/ros/humble _=/usr/bin/env /usr/bin/cmake --build /workspaces/isaac_ros-dev/ros2/build/qcar2_interfaces -- -j16 -l16

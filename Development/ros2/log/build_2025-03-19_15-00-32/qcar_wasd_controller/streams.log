@@ -1,0 +1,24 @@
+[1.308s] Invoking command in '/workspaces/isaac_ros-dev/ros2/src/qcar_wasd_controller': PYTHONPATH=/workspaces/isaac_ros-dev/ros2/build/qcar_wasd_controller/prefix_override:/workspaces/isaac_ros-dev/ros2/install/qcar_wasd_controller/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py egg_info --egg-base ../../build/qcar_wasd_controller build --build-base /workspaces/isaac_ros-dev/ros2/build/qcar_wasd_controller/build install --record /workspaces/isaac_ros-dev/ros2/build/qcar_wasd_controller/install.log --single-version-externally-managed
+[1.710s] running egg_info
+[1.725s] writing ../../build/qcar_wasd_controller/qcar_wasd_controller.egg-info/PKG-INFO
+[1.725s] writing dependency_links to ../../build/qcar_wasd_controller/qcar_wasd_controller.egg-info/dependency_links.txt
+[1.725s] writing entry points to ../../build/qcar_wasd_controller/qcar_wasd_controller.egg-info/entry_points.txt
+[1.725s] writing requirements to ../../build/qcar_wasd_controller/qcar_wasd_controller.egg-info/requires.txt
+[1.726s] writing top-level names to ../../build/qcar_wasd_controller/qcar_wasd_controller.egg-info/top_level.txt
+[1.753s] reading manifest file '../../build/qcar_wasd_controller/qcar_wasd_controller.egg-info/SOURCES.txt'
+[1.754s] writing manifest file '../../build/qcar_wasd_controller/qcar_wasd_controller.egg-info/SOURCES.txt'
+[1.754s] running build
+[1.754s] running build_py
+[1.755s] copying qcar_wasd_controller/wasd_teleop.py -> /workspaces/isaac_ros-dev/ros2/build/qcar_wasd_controller/build/lib/qcar_wasd_controller
+[1.755s] running install
+[1.759s] running install_lib
+[1.775s] copying /workspaces/isaac_ros-dev/ros2/build/qcar_wasd_controller/build/lib/qcar_wasd_controller/wasd_teleop.py -> /workspaces/isaac_ros-dev/ros2/install/qcar_wasd_controller/lib/python3.8/site-packages/qcar_wasd_controller
+[1.776s] byte-compiling /workspaces/isaac_ros-dev/ros2/install/qcar_wasd_controller/lib/python3.8/site-packages/qcar_wasd_controller/wasd_teleop.py to wasd_teleop.cpython-38.pyc
+[1.777s] running install_data
+[1.790s] running install_egg_info
+[1.806s] removing '/workspaces/isaac_ros-dev/ros2/install/qcar_wasd_controller/lib/python3.8/site-packages/qcar_wasd_controller-0.0.1-py3.8.egg-info' (and everything under it)
+[1.806s] Copying ../../build/qcar_wasd_controller/qcar_wasd_controller.egg-info to /workspaces/isaac_ros-dev/ros2/install/qcar_wasd_controller/lib/python3.8/site-packages/qcar_wasd_controller-0.0.1-py3.8.egg-info
+[1.808s] running install_scripts
+[1.893s] Installing wasd_teleop script to /workspaces/isaac_ros-dev/ros2/install/qcar_wasd_controller/lib/qcar_wasd_controller
+[1.894s] writing list of installed files to '/workspaces/isaac_ros-dev/ros2/build/qcar_wasd_controller/install.log'
+[1.957s] Invoked command in '/workspaces/isaac_ros-dev/ros2/src/qcar_wasd_controller' returned '0': PYTHONPATH=/workspaces/isaac_ros-dev/ros2/build/qcar_wasd_controller/prefix_override:/workspaces/isaac_ros-dev/ros2/install/qcar_wasd_controller/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py egg_info --egg-base ../../build/qcar_wasd_controller build --build-base /workspaces/isaac_ros-dev/ros2/build/qcar_wasd_controller/build install --record /workspaces/isaac_ros-dev/ros2/build/qcar_wasd_controller/install.log --single-version-externally-managed
