@@ -4,7 +4,6 @@
 # But allow these specific items
 !.gitignore
 !README.md
-!Development/
-!docker/
-docker/*
+!Development/*
 !docker/Dockerfile.quanser
+
