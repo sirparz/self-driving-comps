@@ -20,7 +20,13 @@ This includes installing:
 
 ## 🧭 Repository Structure
 ```
-ACC_Development/ ├── Development/ # Main working directory for ROS 2 packages and dev code │ └── ros2/ # Contains src/, build/, install/, log/ ├── docker/ │ └── Dockerfile.quanser # Docker setup for consistent dev environment ├── [Other folders are ignored for privacy/sandbox use]
+ACC_Development/ 
+├── Development/ # Main working directory for ROS 2 packages and dev code 
+│ └── ros2/ # Contains the ROS2 workspace
+│ └── matlab-simulink/ 
+├── docker/ 
+│ └── Dockerfile.quanser # Docker setup for consistent dev environment 
+├── [Other folders are ignored for privacy/sandbox use]
 
 ```
 ---
@@ -35,6 +41,6 @@ Follow: [ACC Software Setup Instructions](https://github.com/quanser/ACC-Competi
 After completing setup, clone this repository into your workspace directory:
 
 ```bash
-mkdir -p ~/Documents
 cd ~/Documents
-git clone <your-private-repo-url> ACC_Development
+git clone https://github.com/sirparz/self-driving-comps ACC_Development
+```
