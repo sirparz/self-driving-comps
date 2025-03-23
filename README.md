@@ -1,6 +1,7 @@
 # ACC Development
 
-Private development workspace for the Quanser Autonomous Connected Car (ACC) Competition 2025.
+Development workspace for the American Control Conference (ACC) 2025 Quanser Students Self-driving Car Competition for Qatar University team.
+
 
 ---
 
