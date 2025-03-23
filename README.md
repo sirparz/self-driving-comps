@@ -1,4 +1,4 @@
-# ACC Development
+# Self-Driving Car Competition: Team QUEST
 
 Development workspace for the American Control Conference (ACC) 2025 Quanser Students Self-driving Car Competition for Qatar University team.
 
