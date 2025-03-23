@@ -11,9 +11,8 @@ Before using this repository, make sure your system is set up according to the o
 👉 [Quanser ACC Software Setup Guide](https://github.com/quanser/ACC-Competition-2025/blob/main/Software_Guides/ACC%20Software%20Setup%20Instructions.md)
 
 This includes installing:
-- ROS 2 Humble
-- Docker and NVIDIA Container Toolkit (for Jetson or GPU acceleration)
-- Isaac ROS SDK (if applicable)
+- Quanser Virtual Environment
+- Isaac ROS Container
 - Additional dependencies required for the ACC platform
 
 ---
