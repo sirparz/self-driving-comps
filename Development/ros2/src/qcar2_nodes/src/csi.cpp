@@ -90,6 +90,7 @@ int main(int argc, char ** argv)
     // parameters that cannot be changed once node is running
     t_uint32 camera_num;    // = 0;
     std::string device_type; 
+    std::string camera_pos; 
     t_uint32 frame_width;   // = 820;
     t_uint32 frame_height;  // = 410;
     t_double frame_rate;    // = 30;
@@ -104,14 +105,7 @@ int main(int argc, char ** argv)
     rclcpp::NodeOptions options;
     rclcpp::Node::SharedPtr node = rclcpp::Node::make_shared("csi", options);
 
-    // Image transport creation
-    image_transport::ImageTransport it(node);
-    image_transport::Publisher image_pub = it.advertise("camera/csi_image", 1);
-    // note that camera mapping as follow:
-    // 0: right
-    // 1: rear
-    // 2: front
-    // 3: left
+    
 
     // Parameters initialization
     try
@@ -151,6 +145,32 @@ int main(int argc, char ** argv)
     node->declare_parameter("frame_rate", 30.0, param_desc);
     frame_rate = node->get_parameter("frame_rate").as_double();
     //RCLCPP_INFO(node->get_logger(), "Parameter frame_rate = %lf", frame_rate);
+
+    switch(camera_num){
+        case 0:
+            camera_pos = "right";
+            break;
+        case 1:
+            camera_pos = "rear";
+            break;
+        case 2:
+            camera_pos = "left";
+            break;
+        case 3:
+            camera_pos = "front";
+            break;
+        default:
+            break;
+    }
+
+    // Image transport creation
+    image_transport::ImageTransport it(node);
+    image_transport::Publisher image_pub = it.advertise("camera/csi_" + camera_pos + "_image", 1);
+    // note that camera mapping as follow:
+    // 0: right
+    // 1: rear
+    // 2: front
+    // 3: left
     
     if (device_type.compare("physical")==0 ){
         if (sprintf(uri, "video://localhost:%i", camera_num) < 0)
@@ -219,7 +239,7 @@ int main(int argc, char ** argv)
                     {
                         msg = cv_bridge::CvImage(hdr, sensor_msgs::image_encodings::BGR8, image_matrix).toImageMsg();
                         msg->header.stamp = node->get_clock()->now();
-                        msg->header.frame_id = "csi_image";
+                        msg->header.frame_id = "csi_" + camera_pos + "_image";
                         image_pub.publish(msg);
                     }
                 }

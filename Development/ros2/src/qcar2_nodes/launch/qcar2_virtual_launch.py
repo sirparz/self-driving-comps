@@ -56,10 +56,17 @@ def generate_launch_description():
             parameters=[{"device_type":"virtual"}]
         )
     
-    state_publisher = Node(
+    fake_joint_publisher = Node(
+        package='joint_state_publisher',
+        executable='joint_state_publisher',
+        name='JointStatePublisher',
+        output='screen'
+    )
+    
+    robot_state_publisher = Node(
             package='robot_state_publisher',
             executable='robot_state_publisher',
-            name='StatePublisher',
+            name='RobotStatePublisher',
             output='screen',
             parameters=[{
                 'robot_description': open(urdf_path).read()
@@ -71,5 +78,6 @@ def generate_launch_description():
         realsense_camera_node,
         csi_camera_node,
         qcar2_hardware,
-        state_publisher,
+        fake_joint_publisher,
+        robot_state_publisher,
     ])

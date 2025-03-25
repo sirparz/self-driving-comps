@@ -36,6 +36,7 @@ RUN rm Quanser.pub
 RUN apt-get update && apt-get install -y \
     quanser-sdk \
     quarc-runtime \
+    ros-humble-joint-state-publisher \
     && rm -rf /var/lib/apt/lists/*
     
 # Install Python Packages if necessary
