@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<robot name="localizer_robot" xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <link name="base_link"/>
+
+  <!-- CSI Front -->
+  <link name="csi_front_link"/>
+  <joint name="csi_front_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="csi_front_link"/>
+    <origin xyz="0.183 0.0 0.110" rpy="-1.5708 0.0 -1.5708"/>
+  </joint>
+
+  <!-- CSI Left -->
+  <link name="csi_left_link"/>
+  <joint name="csi_left_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="csi_left_link"/>
+    <origin xyz="0.012 0.033 0.110" rpy="0 0 -1.5708"/>
+  </joint>
+
+  <!-- CSI Right -->
+  <link name="csi_right_link"/>
+  <joint name="csi_right_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="csi_right_link"/>
+    <origin xyz="0.012 -0.053 0.110" rpy="3.1416 0 -1.5708"/>
+  </joint>
+
+  <!-- CSI Rear -->
+  <link name="csi_rear_link"/>
+  <joint name="csi_rear_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="csi_rear_link"/>
+    <origin xyz="-0.152 0.0 0.110" rpy="0 0 3.1416"/>
+  </joint>
+
+  <!-- Realsense -->
+  <link name="realsense_link"/>
+  <joint name="realsense_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="realsense_link"/>
+    <origin xyz="0.095 0.032 0.172" rpy="0 -1.5708 0"/>
+  </joint>
+
+  <!-- RPLiDAR -->
+  <link name="rplidar_link"/>
+  <joint name="rplidar_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="rplidar_link"/>
+    <origin xyz="-0.012 0.0 0.193" rpy="0 0 3.1416"/>
+  </joint>
+
+  <!-- IMU -->
+  <link name="imu_link"/>
+  <joint name="imu_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="imu_link"/>
+    <origin xyz="0.011 0.0 0.089" rpy="0 0 0"/>
+  </joint>
+
+</robot>

@@ -477,7 +477,7 @@ private:
         imu.angular_velocity.z = OIBuffer[2];
         
         imu.header.stamp = hil_read_time;
-        imu.header.frame_id = "base_link";
+        imu.header.frame_id = "imu_link";
         imu_publisher_->publish(imu);
 
         /* Joint State message */

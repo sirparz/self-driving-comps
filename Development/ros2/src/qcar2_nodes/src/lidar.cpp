@@ -321,7 +321,8 @@ would not be sent on the /scan message.";
             
             if (result >= 0 && ((t_uint32)result >= (num_scan_points - ((1 - scan_mode) * num_allowable_invalid_data))))
             {
-                msgs.header.frame_id = "base_scan";
+                //msgs.header.frame_id = "base_scan";
+                msgs.header.frame_id = "rplidar_link";
                 msgs.range_min = min_distance;
                 msgs.range_max = max_distance;
 

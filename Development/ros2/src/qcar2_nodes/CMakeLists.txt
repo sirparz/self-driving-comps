@@ -126,6 +126,10 @@ install(DIRECTORY config
   DESTINATION share/${PROJECT_NAME}/
 )
 
+install(
+  DIRECTORY urdf
+  DESTINATION share/${PROJECT_NAME}
+)
 
 
 if(BUILD_TESTING)
@@ -141,3 +145,4 @@ if(BUILD_TESTING)
 endif()
 
 ament_package()
+
