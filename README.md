@@ -20,14 +20,9 @@ This includes installing:
 
 ## 🧭 Repository Structure
 ```
-ACC_Development/ 
-├── Development/ # Main working directory for ROS 2 packages and dev code 
-│ └── ros2/ # Contains the ROS2 workspace
-│ └── matlab-simulink/ 
-├── docker/ 
-│ └── Dockerfile.quanser # Docker setup for consistent dev environment 
-├── [Other folders are ignored for privacy/sandbox use]
-
+Development/ # Main working directory for ROS 2 packages and dev code 
+├── ros2/ # Contains the ROS2 workspace
+└── matlab-simulink/ 
 ```
 ---
 
