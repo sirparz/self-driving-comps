@@ -27,7 +27,7 @@
     <origin xyz="0.012 -0.053 0.110" rpy="3.1416 0 -1.5708"/>
   </joint>
 
-  <!-- CSI Rear -->
+  <!-- CSI Rear   -->
   <link name="csi_rear_link"/>
   <joint name="csi_rear_joint" type="fixed">
     <parent link="base_link"/>
