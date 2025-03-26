@@ -14,6 +14,7 @@ RUN apt-get update && apt-get install -y \
     ros-humble-image-transport \
     ros-humble-cartographer \
     ros-humble-cartographer-ros \
+    ros-humble-joint-state-publisher \
     && rm -rf /var/lib/apt/lists/*
 
 # Install system libraries that quanser-sdk depends on
@@ -37,13 +38,14 @@ RUN rm Quanser.pub
 RUN apt-get update && apt-get install -y \
     quanser-sdk \
     quarc-runtime \
-    ros-humble-joint-state-publisher \
+    python3-colcon-common-extensions \
+    python3-vcstool \
+    ros-dev-tools \
     && rm -rf /var/lib/apt/lists/*
     
 # Install Python Packages if necessary
 RUN pip3 install -U \
     pytransform3d \
     pyqtgraph \ 
-    pygame
+    pygame \
     
-

@@ -8,7 +8,7 @@
   <joint name="csi_front_joint" type="fixed">
     <parent link="base_link"/>
     <child link="csi_front_link"/>
-    <origin xyz="0.183 0.0 0.110" rpy="-1.5708 0.0 -1.5708"/>
+    <origin xyz="0.183 0.0 0.110" rpy="0.0 0.0 0.0"/>
   </joint>
 
   <!-- CSI Left -->
@@ -16,7 +16,7 @@
   <joint name="csi_left_joint" type="fixed">
     <parent link="base_link"/>
     <child link="csi_left_link"/>
-    <origin xyz="0.012 0.033 0.110" rpy="0 0 -1.5708"/>
+    <origin xyz="0.012 0.033 0.110" rpy="0 0 1.5708"/>
   </joint>
 
   <!-- CSI Right -->
@@ -24,10 +24,10 @@
   <joint name="csi_right_joint" type="fixed">
     <parent link="base_link"/>
     <child link="csi_right_link"/>
-    <origin xyz="0.012 -0.053 0.110" rpy="3.1416 0 -1.5708"/>
+    <origin xyz="0.012 -0.053 0.110" rpy="0 0 -1.5708"/>
   </joint>
 
-  <!-- CSI Rear   -->
+  <!-- CSI Rear -->
   <link name="csi_rear_link"/>
   <joint name="csi_rear_joint" type="fixed">
     <parent link="base_link"/>
@@ -40,7 +40,7 @@
   <joint name="realsense_joint" type="fixed">
     <parent link="base_link"/>
     <child link="realsense_link"/>
-    <origin xyz="0.095 0.032 0.172" rpy="0 -1.5708 0"/>
+    <origin xyz="0.095 0.032 0.172" rpy="0 0 0"/>
   </joint>
 
   <!-- RPLiDAR -->

@@ -18,22 +18,24 @@
 
 #include "std_msgs/msg/header.hpp"
 
+#include <tf2/LinearMath/Quaternion.h>
+#include <tf2_ros/transform_broadcaster.h>
+#include <geometry_msgs/msg/transform_stamped.hpp>
+
 using namespace std::chrono_literals;
 using namespace std::placeholders;
 
-
-class RGBD: public rclcpp::Node
+class RGBD : public rclcpp::Node
 {
-    public:
-    RGBD(): Node("rgbd")
+public:
+    RGBD() : Node("rgbd")
     {
-
         // Parameters initialization
         try
         {
             parameter_cb = this->add_on_set_parameters_callback(std::bind(&RGBD::set_parameters_callback, this, _1));
         }
-        catch (const std::bad_alloc& e)
+        catch (const std::bad_alloc &e)
         {
             RCLCPP_ERROR(this->get_logger(), "Error setting up parameters callback. %s", e.what());
             return;
@@ -45,36 +47,37 @@ class RGBD: public rclcpp::Node
         // Read Parameters once node has started
         this->getParameters();
 
-        //Use device_type to automatically configure for virtual or physical, leave blank to use custom values
-        if(device_type.compare("physical")==0){
+        // Use device_type to automatically configure for virtual or physical, leave blank to use custom values
+        if (device_type.compare("physical") == 0)
+        {
             camera_identifier = "0";
         }
-        else if (device_type.compare("virtual")==0)
+        else if (device_type.compare("virtual") == 0)
         {
-            camera_identifier ="0@tcpip://localhost:18965";
+            camera_identifier = "0@tcpip://localhost:18965";
         }
-        else if (device_type.compare("custom")==0)
+        else if (device_type.compare("custom") == 0)
         {
             camera_identifier = camera_num.append(device_num);
         }
         else
-            {RCLCPP_ERROR(this->get_logger(), "The device type selected in invalid, please restart the node and select from virtual/physical/custom....");
+        {
+            RCLCPP_ERROR(this->get_logger(), "The device type selected in invalid, please restart the node and select from virtual/physical/custom....");
             return;
-            }
+        }
 
         // Logger info for user to be aware of how the camera was configured
-        RCLCPP_INFO(this->get_logger(),"Camera identifier is: %s ",camera_identifier.c_str());
+        RCLCPP_INFO(this->get_logger(), "Camera identifier is: %s ", camera_identifier.c_str());
 
-
-        //Open the video3D device using the passed parameters
-		result = video3d_open(camera_identifier.c_str(), &capture);
+        // Open the video3D device using the passed parameters
+        result = video3d_open(camera_identifier.c_str(), &capture);
         if (result < 0)
         {
             msg_get_error_messageA(NULL, result, error_message, sizeof(error_message));
             RCLCPP_ERROR(this->get_logger(), "hil_open error: %s", error_message);
             return;
         }
-        else if (result>=0)
+        else if (result >= 0)
         {
             // Open video3d stream
             result_rgb = video3d_stream_open(capture, VIDEO3D_STREAM_COLOR, 0, frame_rate_param, frame_width_rgb, frame_height_rgb, IMAGE_FORMAT_ROW_MAJOR_INTERLEAVED_BGR, IMAGE_DATA_TYPE_UINT8, &rgb_stream);
@@ -82,10 +85,10 @@ class RGBD: public rclcpp::Node
             // RCLCPP_INFO(this->get_logger(),"Result_rgb, Result_depth: %i,%i ",result_rgb,result_depth);
 
             if ((result_rgb >= 0) && (result_depth >= 0))
-                {
-                    // Start streaming images from camera
-                    result = video3d_start_streaming(capture);
-                }
+            {
+                // Start streaming images from camera
+                result = video3d_start_streaming(capture);
+            }
             else
             {
                 msg_get_error_messageA(NULL, result_rgb, error_message, sizeof(error_message));
@@ -96,33 +99,29 @@ class RGBD: public rclcpp::Node
             }
         }
 
-
-
-        frame_rate_milliseconds = int((1/frame_rate_param)*1000.0);
+        frame_rate_milliseconds = int((1 / frame_rate_param) * 1000.0);
         // Timer to publish images periodically
         timer_ = this->create_wall_timer(
             std::chrono::milliseconds(frame_rate_milliseconds),
-            std::bind(&RGBD::publishImages, this)
-        );
-
+            std::bind(&RGBD::publishImages, this));
+        tf_broadcaster_ = std::make_shared<tf2_ros::TransformBroadcaster>(this);
     }
 
-    void parameterSetup(){
+    void parameterSetup()
+    {
         auto param_desc = rcl_interfaces::msg::ParameterDescriptor{};
-
 
         param_desc.description = "Virtual/physical/custom camera flag";
         param_desc.additional_constraints = "This flag is used to automatically set the camera info to switch from virtual/physical/custom";
-        this->declare_parameter("device_type",device_type,param_desc);
-
+        this->declare_parameter("device_type", device_type, param_desc);
 
         param_desc.description = "Camera Number Configuration";
         param_desc.additional_constraints = "The camera number of the RGBD camera. On QBot Platform, it should normally be 0";
-        this->declare_parameter("camera_num",camera_num_identifier,param_desc);
+        this->declare_parameter("camera_num", camera_num_identifier, param_desc);
 
         param_desc.description = "Device Number Configuration";
         param_desc.additional_constraints = "The device number parameter is used to switch between information coming from the virtual QCar2 RGBD camera or the physical QCar2";
-        this->declare_parameter("device_num",device_num_identifier, param_desc);
+        this->declare_parameter("device_num", device_num_identifier, param_desc);
 
         param_desc.description = "The requested frame width of the RGB stream. Only certain combinations of frame_width_rgb, frame_height_rgb, and frame_rate parameters can be used. Refer to the following Additional constraints for details.";
         param_desc.additional_constraints = "Possible values:\n\t320 x 180 @???\n\t320 x 240 @???\n\t424 x 240 @???\n\t640 x 360 @???\n\t640 x 480 @???\n\t848 x 480 @???\n\t960 x 540 @???\n\t1280 x 720 @???\n\t1920 x 1080 @???";
@@ -143,18 +142,18 @@ class RGBD: public rclcpp::Node
         param_desc.description = "The requested frame rate of the CSI camera. Only certain combinations of frame_width_rgb, frame_height_rgb, and frame_rate parameters can be used. Refer to the following Additional constraints for details.";
         param_desc.additional_constraints = "Possible values:\n\t640 x 400 @210.0\n\t640 x 480 @180.0\n\t1280 x 720 @130.0\n\t1280 x 800 @120.0";
         this->declare_parameter("frame_rate", 30.0, param_desc);
-
     }
 
-    void getParameters(){
+    void getParameters()
+    {
 
         // Info for user to know what has been configured
         device_type = this->get_parameter("device_type").as_string();
 
-        rclcpp::Parameter camera_num_param  = this->get_parameter("camera_num");
+        rclcpp::Parameter camera_num_param = this->get_parameter("camera_num");
         camera_num = camera_num_param.as_string();
 
-        rclcpp::Parameter device_num_param  = this->get_parameter("device_num");
+        rclcpp::Parameter device_num_param = this->get_parameter("device_num");
         device_num = device_num_param.as_string();
 
         frame_width_rgb = this->get_parameter("frame_width_rgb").as_int();
@@ -163,12 +162,11 @@ class RGBD: public rclcpp::Node
         frame_width_depth = this->get_parameter("frame_width_depth").as_int();
         frame_height_depth = this->get_parameter("frame_height_depth").as_int();
 
-
         frame_rate_param = this->get_parameter("frame_rate").as_double();
-
     }
 
-    void ImageTransportSetup(){
+    void ImageTransportSetup()
+    {
 
         // Now that we are sure the node is a shared_ptr, we can use shared_from_this()
         image_transport::ImageTransport it(shared_from_this());
@@ -178,31 +176,27 @@ class RGBD: public rclcpp::Node
         depth_pub_ = it.advertise("camera/depth_image", 1);
     }
 
-
     ~RGBD()
     {
         int result;
 
         result = video3d_close(capture);
-        if (result <0)
-            RCLCPP_ERROR(this->get_logger(),"Closing the RGBD camera with error: %d", result);
+        if (result < 0)
+            RCLCPP_ERROR(this->get_logger(), "Closing the RGBD camera with error: %d", result);
 
         node_running = false;
-        RCLCPP_INFO(this->get_logger(),"rgbd exit");
-
+        RCLCPP_INFO(this->get_logger(), "rgbd exit");
     }
-    private:
 
+private:
     void publishImages()
     {
-
         // Allocate memory for reading image information
-        buffer_rgb = (t_uint8 *) memory_allocate(frame_width_rgb * frame_height_rgb * 3 * sizeof(t_uint8));
-        buffer_depth = (t_uint16 *) memory_allocate(frame_width_depth * frame_height_depth * sizeof(t_uint16));
-
+        buffer_rgb = (t_uint8 *)memory_allocate(frame_width_rgb * frame_height_rgb * 3 * sizeof(t_uint8));
+        buffer_depth = (t_uint16 *)memory_allocate(frame_width_depth * frame_height_depth * sizeof(t_uint16));
 
         if ((buffer_rgb != NULL) && (buffer_depth != NULL))
-	    {
+        {
 
             // if the image buffers area not NULL then let's generate RGB and depth info based on video3d get frame
             t_video3d_frame rgb_frame;
@@ -229,6 +223,25 @@ class RGBD: public rclcpp::Node
                         msg->header.stamp = this->get_clock()->now();
                         msg->header.frame_id = "color_image";
                         rgb_pub_.publish(*msg);
+
+                        // Broadcast RGB transform
+                        geometry_msgs::msg::TransformStamped rgb_transform;
+                        rgb_transform.header.stamp = this->get_clock()->now();
+                        rgb_transform.header.frame_id = "realsense_link"; // Parent frame
+                        rgb_transform.child_frame_id = "color_image";     // Child frame
+
+                        rgb_transform.transform.translation.x = 0.0;
+                        rgb_transform.transform.translation.y = 0.0;
+                        rgb_transform.transform.translation.z = 0.0;
+
+                        tf2::Quaternion rgb_q;
+                        rgb_q.setRPY(-1.5708, 0.0, -1.5708); // Roll, Pitch, Yaw
+                        rgb_transform.transform.rotation.x = rgb_q.x();
+                        rgb_transform.transform.rotation.y = rgb_q.y();
+                        rgb_transform.transform.rotation.z = rgb_q.z();
+                        rgb_transform.transform.rotation.w = rgb_q.w();
+
+                        tf_broadcaster_->sendTransform(rgb_transform);
                     }
                 }
                 else
@@ -247,9 +260,9 @@ class RGBD: public rclcpp::Node
                     RCLCPP_ERROR(this->get_logger(), "Error getting frame from rgb stream: %d -> %s", result, error_message);
                 }
 
-                    // Try to send the same frame as last time
-                    msg = cv_bridge::CvImage(hdr, sensor_msgs::image_encodings::BGR8, color_matrix).toImageMsg();
-                    rgb_pub_.publish(*msg);
+                // Try to send the same frame as last time
+                msg = cv_bridge::CvImage(hdr, sensor_msgs::image_encodings::BGR8, color_matrix).toImageMsg();
+                rgb_pub_.publish(*msg);
             }
 
             // Depth stream
@@ -268,6 +281,25 @@ class RGBD: public rclcpp::Node
                         msg->header.stamp = this->get_clock()->now();
                         msg->header.frame_id = "depth_image";
                         depth_pub_.publish(*msg);
+
+                        // Broadcast Depth transform
+                        geometry_msgs::msg::TransformStamped depth_transform;
+                        depth_transform.header.stamp = this->get_clock()->now();
+                        depth_transform.header.frame_id = "realsense_link";  // Parent frame
+                        depth_transform.child_frame_id = "depth_frame"; // Child frame
+
+                        depth_transform.transform.translation.x = 0.0;
+                        depth_transform.transform.translation.y = -0.04; // -0.0325 i guess
+                        depth_transform.transform.translation.z = 0.0;
+
+                        tf2::Quaternion depth_q;
+                        depth_q.setRPY(-1.5708, 0.0, -1.5708); // Roll, Pitch, Yaw
+                        depth_transform.transform.rotation.x = depth_q.x();
+                        depth_transform.transform.rotation.y = depth_q.y();
+                        depth_transform.transform.rotation.z = depth_q.z();
+                        depth_transform.transform.rotation.w = depth_q.w();
+
+                        tf_broadcaster_->sendTransform(depth_transform);
                     }
                 }
                 else
@@ -279,33 +311,30 @@ class RGBD: public rclcpp::Node
                 video3d_frame_release(depth_frame);
             }
             else
-                    {
-                        if (result != -QERR_WOULD_BLOCK)
-                        {
-                            msg_get_error_messageA(NULL, result, error_message, ARRAY_LENGTH(error_message));
-                            RCLCPP_ERROR(this->get_logger(), "Error getting frame from depth stream: %d -> %s", result, error_message);
-                        }
+            {
+                if (result != -QERR_WOULD_BLOCK)
+                {
+                    msg_get_error_messageA(NULL, result, error_message, ARRAY_LENGTH(error_message));
+                    RCLCPP_ERROR(this->get_logger(), "Error getting frame from depth stream: %d -> %s", result, error_message);
+                }
 
-                        // Try to send the same frame as last time
-                        msg = cv_bridge::CvImage(hdr, sensor_msgs::image_encodings::MONO16, depth_matrix).toImageMsg();
-                        depth_pub_.publish(*msg);
-                    }
-
+                // Try to send the same frame as last time
+                msg = cv_bridge::CvImage(hdr, sensor_msgs::image_encodings::MONO16, depth_matrix).toImageMsg();
+                depth_pub_.publish(*msg);
+            }
         }
 
         memory_free(buffer_rgb);
-		memory_free(buffer_depth);
-
-
+        memory_free(buffer_depth);
     }
-    rcl_interfaces::msg::SetParametersResult set_parameters_callback(const std::vector<rclcpp::Parameter> & parameters)
+    rcl_interfaces::msg::SetParametersResult set_parameters_callback(const std::vector<rclcpp::Parameter> &parameters)
     {
         rcl_interfaces::msg::SetParametersResult result;
 
         result.successful = true;
 
         // Loop through the parameters....can happen if set_parameters_atomically() is called
-        for (const auto & parameter : parameters)
+        for (const auto &parameter : parameters)
         {
             if (parameter.get_name().compare("camera_num") == 0)
             {
@@ -368,59 +397,51 @@ class RGBD: public rclcpp::Node
         return result;
     }
 
-        // check for node running
-        bool node_running = false;
+    // check for node running
+    bool node_running = false;
 
-        // parameters change callback
-        rclcpp::Node::OnSetParametersCallbackHandle::SharedPtr parameter_cb;
+    // parameters change callback
+    rclcpp::Node::OnSetParametersCallbackHandle::SharedPtr parameter_cb;
 
+    // Sample time to get data from rgb image
+    int frame_rate_milliseconds;
 
-        // Sample time to get data from rgb image
-        int frame_rate_milliseconds;
+    // Used for identifying quarc error message
+    char error_message[1024];
 
-        // Used for identifying quarc error message
-        char error_message[1024];
+    // parameters that cannot be changed once node is running
+    std::string camera_num_identifier = "0";
+    std::string device_num_identifier = "";
+    std::string device_type = "physical";
 
+    std::string camera_num;
+    std::string device_num;
 
-        // parameters that cannot be changed once node is running
-        std::string camera_num_identifier = "0";
-        std::string device_num_identifier = "";
-        std::string device_type = "physical";
+    std::string camera_identifier = " ";
+    t_uint32 frame_width_rgb = 1280;
+    t_uint32 frame_height_rgb = 720;
+    t_uint32 frame_width_depth = 1280;
+    t_uint32 frame_height_depth = 720;
+    t_double frame_rate_param = 30.0;
 
+    t_uint8 *buffer_rgb;
+    t_uint16 *buffer_depth;
 
-        std::string camera_num;
-        std::string device_num;
+    t_video3d capture;
+    t_error result, result_rgb, result_depth;
+    t_video3d_stream rgb_stream;
+    t_video3d_stream depth_stream;
 
+    // Image publishers
+    image_transport::Publisher rgb_pub_;
+    image_transport::Publisher depth_pub_;
 
-        std::string camera_identifier = " ";
-        t_uint32 frame_width_rgb = 1280;
-        t_uint32 frame_height_rgb = 720;
-        t_uint32 frame_width_depth = 1280;
-        t_uint32 frame_height_depth = 720;
-        t_double frame_rate_param = 30.0;
-
-        t_uint8  *buffer_rgb;
-        t_uint16 *buffer_depth;
-
-        t_video3d capture;
-        t_error result, result_rgb, result_depth;
-        t_video3d_stream rgb_stream;
-        t_video3d_stream depth_stream;
-
-
-        // Image publishers
-        image_transport::Publisher rgb_pub_;
-        image_transport::Publisher depth_pub_;
-
-        // Timer for periodic publishing
-        rclcpp::TimerBase::SharedPtr timer_;
-
+    // Timer for periodic publishing
+    rclcpp::TimerBase::SharedPtr timer_;
+    std::shared_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster_;
 };
 
-
-
-
-int main(int argc, char ** argv)
+int main(int argc, char **argv)
 {
     rclcpp::init(argc, argv);
 
@@ -436,7 +457,6 @@ int main(int argc, char ** argv)
 
     RCLCPP_INFO(node->get_logger(), "Starting rgbd camera loop...");
     executor.spin();
-
 
     RCLCPP_INFO(node->get_logger(), "rgbd camera ended.");
     rclcpp::shutdown();

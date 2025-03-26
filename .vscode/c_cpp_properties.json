@@ -1,0 +1,21 @@
+{
+    "configurations": [
+      {
+        "name": "Isaac ROS Dev (Humble)",
+        "includePath": [
+          "${workspaceFolder}/**",
+          "/opt/ros/humble/include/**",
+          "${workspaceFolder}/ros2/install/**/include/**",
+          "${workspaceFolder}/ros2/src/**",
+          "/usr/include/**"
+        ],
+        "defines": [],
+        "compilerPath": "/usr/bin/g++",
+        "cStandard": "c11",
+        "cppStandard": "c++17",
+        "intelliSenseMode": "linux-gcc-x64"
+      }
+    ],
+    "version": 4
+  }
+  

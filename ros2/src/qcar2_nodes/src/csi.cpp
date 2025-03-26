@@ -18,16 +18,21 @@
 
 #include "std_msgs/msg/header.hpp"
 
+// Add these for transforms
+#include <tf2/LinearMath/Quaternion.h>
+#include <tf2_ros/transform_broadcaster.h>
+#include <geometry_msgs/msg/transform_stamped.hpp>
+
 bool node_running = false;
 
-rcl_interfaces::msg::SetParametersResult set_parameters_callback(const std::vector<rclcpp::Parameter> & parameters)
+rcl_interfaces::msg::SetParametersResult set_parameters_callback(const std::vector<rclcpp::Parameter> &parameters)
 {
     rcl_interfaces::msg::SetParametersResult result;
 
     result.successful = true;
 
     // Loop through the parameters....can happen if set_parameters_atomically() is called
-    for (const auto & parameter : parameters)
+    for (const auto &parameter : parameters)
     {
         if (parameter.get_name().compare("camera_num") == 0)
         {
@@ -79,7 +84,7 @@ rcl_interfaces::msg::SetParametersResult set_parameters_callback(const std::vect
     return result;
 }
 
-int main(int argc, char ** argv)
+int main(int argc, char **argv)
 {
     char error_message[1024];
     char uri[80];
@@ -88,15 +93,15 @@ int main(int argc, char ** argv)
     rclcpp::Node::OnSetParametersCallbackHandle::SharedPtr parameter_cb;
 
     // parameters that cannot be changed once node is running
-    t_uint32 camera_num;    // = 0;
-    std::string device_type; 
-    std::string camera_pos; 
-    t_uint32 frame_width;   // = 820;
-    t_uint32 frame_height;  // = 410;
-    t_double frame_rate;    // = 30;
+    t_uint32 camera_num; // = 0;
+    std::string device_type;
+    std::string camera_pos;
+    t_uint32 frame_width;  // = 820;
+    t_uint32 frame_height; // = 410;
+    t_double frame_rate;   // = 30;
 
     t_uint8 *image_buffer;
-	t_video_capture capture;
+    t_video_capture capture;
 
     t_error result;
 
@@ -105,6 +110,7 @@ int main(int argc, char ** argv)
     rclcpp::NodeOptions options;
     rclcpp::Node::SharedPtr node = rclcpp::Node::make_shared("csi", options);
 
+    std::shared_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster = std::make_shared<tf2_ros::TransformBroadcaster>(node);
     
 
     // Parameters initialization
@@ -112,14 +118,14 @@ int main(int argc, char ** argv)
     {
         parameter_cb = node->add_on_set_parameters_callback(set_parameters_callback);
     }
-    catch (const std::bad_alloc& e)
+    catch (const std::bad_alloc &e)
     {
         RCLCPP_ERROR(node->get_logger(), "Error setting up parameters callback. %s", e.what());
     }
     auto param_desc = rcl_interfaces::msg::ParameterDescriptor{};
 
     param_desc.description = "The camera number of the CSI camera. On QCar 2, it should normally be betwee 0 and 4";
-    node->declare_parameter<int>("camera_num",0, param_desc);
+    node->declare_parameter<int>("camera_num", 0, param_desc);
     camera_num = node->get_parameter("camera_num").as_int();
     // RCLCPP_INFO(node->get_logger(), "Parameter camera_num = %i", camera_num);
 
@@ -132,35 +138,36 @@ int main(int argc, char ** argv)
     param_desc.additional_constraints = "Native formats:\n\t820 x 410 @120.0\n\t1640 x 820 @120.0\n\t820 x 616 @80.0\n\t1640 x 1232 @80.0\n\t3280 x 2464 @21.0";
     node->declare_parameter("frame_width", 820, param_desc);
     frame_width = node->get_parameter("frame_width").as_int();
-    //RCLCPP_INFO(node->get_logger(), "Parameter frame_width = %d", frame_width);
+    // RCLCPP_INFO(node->get_logger(), "Parameter frame_width = %d", frame_width);
 
     param_desc.description = "The requested frame height of the CSI camera. Refer to the following Additional constraints for details on the native formats.";
     param_desc.additional_constraints = "Native formats:\n\t820 x 410 @120.0\n\t1640 x 820 @120.0\n\t820 x 616 @80.0\n\t1640 x 1232 @80.0\n\t3280 x 2464 @21.0";
     node->declare_parameter("frame_height", 410, param_desc);
     frame_height = node->get_parameter("frame_height").as_int();
-    //RCLCPP_INFO(node->get_logger(), "Parameter frame_height = %d", frame_height);
+    // RCLCPP_INFO(node->get_logger(), "Parameter frame_height = %d", frame_height);
 
     param_desc.description = "The requested frame rate of the CSI camera. Refer to the following Additional constraints for details on the native formats.";
     param_desc.additional_constraints = "Native formats:\n\t820 x 410 @120.0\n\t1640 x 820 @120.0\n\t820 x 616 @80.0\n\t1640 x 1232 @80.0\n\t3280 x 2464 @21.0";
     node->declare_parameter("frame_rate", 30.0, param_desc);
     frame_rate = node->get_parameter("frame_rate").as_double();
-    //RCLCPP_INFO(node->get_logger(), "Parameter frame_rate = %lf", frame_rate);
+    // RCLCPP_INFO(node->get_logger(), "Parameter frame_rate = %lf", frame_rate);
 
-    switch(camera_num){
-        case 0:
-            camera_pos = "right";
-            break;
-        case 1:
-            camera_pos = "rear";
-            break;
-        case 2:
-            camera_pos = "left";
-            break;
-        case 3:
-            camera_pos = "front";
-            break;
-        default:
-            break;
+    switch (camera_num)
+    {
+    case 0:
+        camera_pos = "right";
+        break;
+    case 1:
+        camera_pos = "rear";
+        break;
+    case 2:
+        camera_pos = "left";
+        break;
+    case 3:
+        camera_pos = "front";
+        break;
+    default:
+        break;
     }
 
     // Image transport creation
@@ -171,32 +178,33 @@ int main(int argc, char ** argv)
     // 1: rear
     // 2: front
     // 3: left
-    
-    if (device_type.compare("physical")==0 ){
+
+    if (device_type.compare("physical") == 0)
+    {
         if (sprintf(uri, "video://localhost:%i", camera_num) < 0)
         {
             RCLCPP_ERROR(node->get_logger(), "Cannot form camera uri.");
             return -1;
         }
     }
-    else if (device_type.compare("virtual")==0){
+    else if (device_type.compare("virtual") == 0)
+    {
 
-        if (sprintf(uri, "video://localhost:%i@tcpip://localhost:%i",camera_num,18961+camera_num) < 0)
+        if (sprintf(uri, "video://localhost:%i@tcpip://localhost:%i", camera_num, 18961 + camera_num) < 0)
         {
             RCLCPP_ERROR(node->get_logger(), "Cannot form camera uri.");
             return -1;
         }
     }
-    else 
+    else
     {
-            RCLCPP_ERROR(node->get_logger(), "Cannot form camera uri.");
+        RCLCPP_ERROR(node->get_logger(), "Cannot form camera uri.");
         return -1;
-
     }
     RCLCPP_INFO(node->get_logger(), "camera uri: %s", uri);
 
     // Buffer to be used to grab image from camera
-    image_buffer = (t_uint8 *) memory_allocate(frame_width * frame_height * 3 * sizeof(t_uint8));
+    image_buffer = (t_uint8 *)memory_allocate(frame_width * frame_height * 3 * sizeof(t_uint8));
 
     if (image_buffer == NULL)
     {
@@ -241,6 +249,27 @@ int main(int argc, char ** argv)
                         msg->header.stamp = node->get_clock()->now();
                         msg->header.frame_id = "csi_" + camera_pos + "_image";
                         image_pub.publish(msg);
+
+                        // Broadcast transform
+                        geometry_msgs::msg::TransformStamped transform_stamped;
+                        transform_stamped.header.stamp = node->get_clock()->now();
+                        transform_stamped.header.frame_id = "csi_" + camera_pos + "_link"; // Parent frame
+                        transform_stamped.child_frame_id = "csi_" + camera_pos + "_image";     // Child frame
+
+                        // Set translation (example values)
+                        transform_stamped.transform.translation.x = 0.0;
+                        transform_stamped.transform.translation.y = 0.0;
+                        transform_stamped.transform.translation.z = 0.0;
+
+                        // Set rotation (example values)
+                        tf2::Quaternion q;
+                        q.setRPY(-1.5708, 0.0, -1.5708); // Roll, Pitch, Yaw
+                        transform_stamped.transform.rotation.x = q.x();
+                        transform_stamped.transform.rotation.y = q.y();
+                        transform_stamped.transform.rotation.z = q.z();
+                        transform_stamped.transform.rotation.w = q.w();
+
+                        tf_broadcaster->sendTransform(transform_stamped);
                     }
                 }
                 else
@@ -261,7 +290,7 @@ int main(int argc, char ** argv)
                     rclcpp::spin_some(node);
                     loop_rate.sleep();
                 }
-                catch(...)
+                catch (...)
                 {
                     // ImageTransport and the Node seems to both handle the Ctrl-C interrupt.
                     // One of them tries to shtudown and causes a rclcpp::execptions::RCLError exception
@@ -270,7 +299,7 @@ int main(int argc, char ** argv)
                     //      either rcl_init() was not called or rcl_shutdown() was called.
                     //
                     // At this point, we're shutting down anyways, so just ignore the exception.
-                    //RCLCPP_ERROR(node->get_logger(), "Caught exception");
+                    // RCLCPP_ERROR(node->get_logger(), "Caught exception");
                 }
             }
 

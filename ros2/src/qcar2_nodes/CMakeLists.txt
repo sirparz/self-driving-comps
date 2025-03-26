@@ -51,7 +51,7 @@ add_executable(rgbd src/rgbd.cpp)
 # compile properly.
 target_include_directories(rgbd PUBLIC /usr/include/opencv4)
 target_link_libraries(rgbd cv_bridge::cv_bridge image_transport::image_transport opencv_imgcodecs -lquanser_media -lquanser_runtime -lquanser_common)
-ament_target_dependencies(rgbd rclcpp cv_bridge image_transport OpenCV std_msgs sensor_msgs)
+ament_target_dependencies(rgbd rclcpp cv_bridge image_transport OpenCV std_msgs sensor_msgs geometry_msgs rclcpp tf2_ros)
 
 add_executable(lidar src/lidar.cpp)
 target_link_libraries(lidar -lquanser_devices -lquanser_communications -lquanser_runtime -lquanser_common)
@@ -63,7 +63,7 @@ add_executable(csi src/csi.cpp)
 # compile properly.
 target_include_directories(csi PUBLIC /usr/include/opencv4)
 target_link_libraries(csi cv_bridge::cv_bridge image_transport::image_transport opencv_imgcodecs -lquanser_media -lquanser_runtime -lquanser_common)
-ament_target_dependencies(csi rclcpp cv_bridge image_transport OpenCV std_msgs sensor_msgs)
+ament_target_dependencies(csi rclcpp cv_bridge image_transport OpenCV std_msgs sensor_msgs geometry_msgs rclcpp tf2_ros)
 
 # TF
 # qcar2 -> lidar
