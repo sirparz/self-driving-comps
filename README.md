@@ -41,14 +41,14 @@ Follow: [ACC Software Setup Instructions](https://github.com/quanser/ACC-Competi
 After completing setup, clone this repository into your workspace directory:
 
 ```bash
-cd ~/Documents
-git clone https://github.com/sirparz/self-driving-comps ACC_Development
+cd ~/Documents/ACC_Development
+git clone https://github.com/sirparz/self-driving-comps Development
 ```
 
 
 ## 🧷 Additional Setup (Terminal Shortcuts)
 
-Refer to [Development/additional_setup.md](Development/additional_setup.md) to configure your terminal so it can launch:
+Refer to [Development/additional_setup.md](additional_setup.md) to configure your terminal so it can launch:
 - Quanser Virtual Environment
 - Isaac ROS Docker container
 Directly from your desktop or with a shortcut.

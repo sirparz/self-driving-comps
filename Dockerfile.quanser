@@ -4,6 +4,7 @@ FROM ${BASE_IMAGE}
 # Remove the apt.kitware.com sources because its signatures seem to be out of date.
 # We don't need it anymore as it is only needed for CMake, which is already
 # installed by the upper image layers (BASE_IMAGE) anyways.
+# Copy this file in ~/Documents/ACC_Development/docker/Dockerfile.quanser for any changes made in this file.
 RUN test -f /etc/apt/sources.list.d/kitware.list && rm /etc/apt/sources.list.d/kitware.list
 
 # Install all the necessary non-Quanser debian packages

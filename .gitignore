@@ -1,16 +1,7 @@
-# Ignore these specific folders
-backup/
-dev/
-isaac_ros_common/
-
-# Ignore everything in `docker/` except `Dockerfile.quanser`
-docker/*
-!docker/Dockerfile.quanser
 
 # Ignore ROS 2 build artifacts inside Development/ros2/
-Development/ros2/build/
-Development/ros2/install/
-Development/ros2/log/
+ros2/build/
+ros2/install/
+ros2/log/
 
-.vscode/c_cpp_properties.json
-Development/.vscode/settings.json
+.vscode/*
