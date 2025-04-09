@@ -286,7 +286,7 @@ private:
                         geometry_msgs::msg::TransformStamped depth_transform;
                         depth_transform.header.stamp = this->get_clock()->now();
                         depth_transform.header.frame_id = "realsense_link";  // Parent frame
-                        depth_transform.child_frame_id = "depth_frame"; // Child frame
+                        depth_transform.child_frame_id = "depth_image"; // Child frame
 
                         depth_transform.transform.translation.x = 0.0;
                         depth_transform.transform.translation.y = -0.04; // -0.0325 i guess

@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>qcar_controller</name>
+  <version>0.0.0</version>
+  <description>QCar controller package for WASD and Logitech G923 controllers</description>
+
+  <maintainer email="your_email@example.com">Your Name</maintainer>
+  <license>Apache 2.0</license>
+
+  <!-- Build tool dependencies -->
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <!-- Runtime dependencies -->
+  <depend>rclpy</depend>
+  <depend>sensor_msgs</depend>
+  <depend>pygame</depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>
