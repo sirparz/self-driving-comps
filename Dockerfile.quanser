@@ -15,6 +15,8 @@ RUN apt-get update && apt-get install -y \
     ros-humble-cartographer \
     ros-humble-cartographer-ros \
     ros-humble-joint-state-publisher \
+    ros-humble-image-tools \
+    ros-humble-rqt-image-view \
     && rm -rf /var/lib/apt/lists/*
 
 # Install system libraries that quanser-sdk depends on
@@ -41,6 +43,9 @@ RUN apt-get update && apt-get install -y \
     python3-colcon-common-extensions \
     python3-vcstool \
     ros-dev-tools \
+    joystick \
+    usbutils \
+    evtest \
     && rm -rf /var/lib/apt/lists/*
     
 # Install Python Packages if necessary
@@ -49,3 +54,4 @@ RUN pip3 install -U \
     pyqtgraph \ 
     pygame \
     
+
