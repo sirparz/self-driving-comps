@@ -53,5 +53,6 @@ RUN pip3 install -U \
     pytransform3d \
     pyqtgraph \ 
     pygame \
+    open3d \
     
 
