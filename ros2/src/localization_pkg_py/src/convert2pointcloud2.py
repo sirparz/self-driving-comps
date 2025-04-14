@@ -2,76 +2,64 @@
 import rclpy
 from rclpy.node import Node
 from sensor_msgs.msg import LaserScan, PointCloud2, PointField
-import numpy as np
+from std_msgs.msg import Header
+import math
+import struct
 
-class LaserScanToPointCloud(Node):
+class LaserToPointCloud(Node):
     def __init__(self):
-        super().__init__('scan_to_pointcloud')
+        super().__init__('laser_to_pointcloud')
         self.subscription = self.create_subscription(
             LaserScan,
             '/scan',
-            self.scan_callback,
+            self.laser_callback,
             10
         )
-        self.publisher = self.create_publisher(PointCloud2, '/pointcloud', 10)
-        self.get_logger().info("Listening to /scan...")
+        self.publisher = self.create_publisher(PointCloud2, '/lidar_points', 10)
+        self.get_logger().info("✅ LaserScan to PointCloud2 node started")
 
-    def scan_callback(self, msg):
-        # Convert LaserScan to 2D point cloud (x, y)
-        angles = np.linspace(msg.angle_min, msg.angle_max, len(msg.ranges))
-        ranges = np.array(msg.ranges)
+    def laser_callback(self, scan):
+        points = []
+        angle = scan.angle_min
 
-        # Filter out invalid ranges
-        valid = np.logical_and(ranges > msg.range_min, ranges < msg.range_max)
-        if not np.any(valid):
-            self.get_logger().warn("No valid points in scan")
-            return
+        for r in scan.ranges:
+            if math.isfinite(r):
+                x = r * math.cos(angle)
+                y = r * math.sin(angle)
+                z = 0.0
+                points.append((x, y, z))
+            angle += scan.angle_increment
 
-        ranges = ranges[valid]
-        angles = angles[valid]
-
-        # Polar to Cartesian
-        xs = ranges * np.cos(angles)
-        ys = ranges * np.sin(angles)
-        points = np.stack((xs, ys, np.zeros_like(xs)), axis=-1)  # Shape: (N, 3)
-
-        self.get_logger().info(f"Received scan with {points.shape[0]} valid points")
-        self.get_logger().debug(f"First few points: {points[:5]}")
-
-        # Publish the point cloud
-        self.publish_pointcloud(points)
-
-    def publish_pointcloud(self, points):
-        # Create PointCloud2 message
-        msg = PointCloud2()
-        msg.header.frame_id = "laser_frame"
-        msg.header.stamp = self.get_clock().now().to_msg()
-
-        msg.height = 1
-        msg.width = points.shape[0]
-        msg.fields = [
+        fields = [
             PointField(name='x', offset=0, datatype=PointField.FLOAT32, count=1),
             PointField(name='y', offset=4, datatype=PointField.FLOAT32, count=1),
             PointField(name='z', offset=8, datatype=PointField.FLOAT32, count=1),
         ]
-        msg.is_bigendian = False
-        msg.point_step = 12
-        msg.row_step = msg.point_step * points.shape[0]
-        msg.is_dense = True
-        msg.data = np.asarray(points, dtype=np.float32).tobytes()
+        cloud_data = b''.join([struct.pack('fff', *point) for point in points])
 
-        self.publisher.publish(msg)
+        header = Header()
+        header.stamp = self.get_clock().now().to_msg()
+        header.frame_id = scan.header.frame_id
+
+        pointcloud = PointCloud2()
+        pointcloud.header = header
+        pointcloud.height = 1
+        pointcloud.width = len(points)
+        pointcloud.fields = fields
+        pointcloud.is_bigendian = False
+        pointcloud.point_step = 12
+        pointcloud.row_step = 12 * len(points)
+        pointcloud.data = cloud_data
+        pointcloud.is_dense = True
+
+        self.publisher.publish(pointcloud)
 
 def main(args=None):
     rclpy.init(args=args)
-    node = LaserScanToPointCloud()
-    try:
-        rclpy.spin(node)
-    except KeyboardInterrupt:
-        pass
-    finally:
-        node.destroy_node()
-        rclpy.shutdown()
+    node = LaserToPointCloud()
+    rclpy.spin(node)
+    node.destroy_node()
+    rclpy.shutdown()
 
 if __name__ == '__main__':
     main()

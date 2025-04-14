@@ -59,13 +59,13 @@ class ICPTester:
         self.last_pcd = current_pcd
         self.current_transform = self.current_transform @ result.transformation
 
-        self._print_pose(result, gt_matrix)
+        self._print_pose(result.transformation , gt_matrix)
 
         return self.current_transform
 
     def _print_pose(self, result, gt_matrix=None):
-        trans = self.current_transform[:3, 3]
-        rot = self.current_transform[:3, :3]
+        trans = self.result[:3, 3]
+        rot = self.result[:3, :3]
         euler = R.from_matrix(rot).as_euler('xyz', degrees=True)
 
         print("\n─── Estimated Pose ───")

@@ -129,15 +129,9 @@ def generate_launch_description():
                               'use_respawn': use_respawn,
                               'container_name': 'nav2_container'}.items()),
     ])
-    
-    qcar2_nav2_converter = Node(
-    package='qcar2_nodes',
-    executable='nav2_qcar2_converter',
-    name='nav2_qcar2_converter',
-    )
 
     # Create the launch description and populate
-    ld = LaunchDescription([qcar2_nav2_converter])
+    ld = LaunchDescription()
 
     # Load the QBot Platform Cartographer launch file
     ld.add_action(qcar2_cartographer_launch)

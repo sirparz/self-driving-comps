@@ -68,5 +68,6 @@
         "codecvt": "cpp",
         "future": "cpp",
         "shared_mutex": "cpp"
-    }
+    },
+    "cmake.sourceDirectory": "/workspaces/isaac_ros-dev/ros2/src/localization_pkg_py"
 }

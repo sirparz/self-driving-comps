@@ -3,20 +3,27 @@
 <package format="3">
   <name>localization_pkg_py</name>
   <version>0.0.0</version>
-  <description>TODO: Package description</description>
+  <description>ICP-based global localization using LiDAR</description>
   <maintainer email="as1605258@qu.edu.qa">axe</maintainer>
-  <license>TODO: License declaration</license>
+  <license>MIT</license>  <!-- Or the license you're using -->
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
-  <depend>rclpy</depend>
-  <depend>sensor_msgs</depend>
-  <depend>geometry_msgs</depend>
-  <depend>nav_msgs</depend>
-  <depend>std_msgs</depend>
-  <depend>tf2</depend>
-  <depend>tf2_ros</depend>
+  <!-- Runtime Dependencies -->
+  <exec_depend>rclpy</exec_depend>
+  <exec_depend>sensor_msgs</exec_depend>
+  <exec_depend>geometry_msgs</exec_depend>
+  <exec_depend>nav_msgs</exec_depend>
+  <exec_depend>std_msgs</exec_depend>
+  <exec_depend>tf2</exec_depend>
+  <exec_depend>tf2_ros</exec_depend>
 
+  <!-- Python libraries required -->
+  <exec_depend>python3-numpy</exec_depend>
+  <exec_depend>python3-scipy</exec_depend>
+  <exec_depend>python3-open3d</exec_depend>
+
+  <!-- Testing -->
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>
 
