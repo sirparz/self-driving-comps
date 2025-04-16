@@ -48,7 +48,7 @@
   <joint name="rplidar_joint" type="fixed">
     <parent link="base_link"/>
     <child link="rplidar_link"/>
-    <origin xyz="-0.012 0.0 0.193" rpy="0 0 3.35"/> <!--rpy="0 0 3.1416"-->
+    <origin xyz="-0.012 0.0 0.193" rpy="0 0 3.3"/> <!--rpy="0 0 3.1416" or maybe 3.35-->
   </joint>
 
   <!-- IMU -->
