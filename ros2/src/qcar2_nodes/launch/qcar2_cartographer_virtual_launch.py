@@ -9,8 +9,8 @@ from launch import LaunchDescription
 from launch.actions import (IncludeLaunchDescription, DeclareLaunchArgument)
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import (PathJoinSubstitution, LaunchConfiguration)
-
 from launch_ros.actions import Node
+
 from launch_ros.substitutions import FindPackageShare
 
 def generate_launch_description():    
@@ -52,11 +52,38 @@ def generate_launch_description():
             default_value='1.0',
             description='Publishing period')
     
+    # map_server_node = Node(
+    #     package='nav2_map_server',
+    #     executable='map_server',
+    #     name='map_server',
+    #     output='screen',
+    #     parameters=[{
+    #         'use_sim_time': True,
+    #         'yaml_filename': LaunchConfiguration('map')
+    #     }],
+    #     arguments=['--ros-args', '--params-file', PathJoinSubstitution([
+    #         FindPackageShare('qcar2_nodes'),
+    #         'config',
+    #         'map_server_params.yaml'
+    #     ])]
+    # )
+
+    # lifecycle_manager_node = Node(
+    #     package='nav2_lifecycle_manager',
+    #     executable='lifecycle_manager',
+    #     name='lifecycle_manager_localization',
+    #     output='screen',
+    #     parameters=[{
+    #         'use_sim_time': True,
+    #         'autostart': True,
+    #         'node_names': ['map_server', 'amcl']
+    #     }]
+    # )
     cartographer_node = Node(
             package='cartographer_ros',
             executable='cartographer_node',
             output='screen',
-            parameters=[{'use_sim_time': use_sim}],
+            parameters=[{'use_sim_time': use_sim, 'use_map': False}],
             arguments=[
                 '-configuration_directory', cartographer_config_dir,
                 '-configuration_basename', configuration_basename
@@ -75,6 +102,8 @@ def generate_launch_description():
         use_sim_la,
         resolution_la,
         publish_period_sec_la,
+        # map_server_node,
+        # lifecycle_manager_node,
         cartographer_node,
         cartographer_occupancy_grid_node,
     ])

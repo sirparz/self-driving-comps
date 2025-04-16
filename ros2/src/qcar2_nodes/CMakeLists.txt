@@ -126,6 +126,11 @@ install(DIRECTORY config
   DESTINATION share/${PROJECT_NAME}/
 )
 
+# Install map files
+install(DIRECTORY map
+  DESTINATION share/${PROJECT_NAME}/
+)
+
 install(
   DIRECTORY urdf
   DESTINATION share/${PROJECT_NAME}
@@ -144,5 +149,5 @@ if(BUILD_TESTING)
   ament_lint_auto_find_test_dependencies()
 endif()
 
-ament_package()
+amen_package()
 
