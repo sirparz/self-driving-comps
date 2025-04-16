@@ -21,14 +21,13 @@ public:
                  x_(0.0), y_(0.0), theta_(0.0),
                  prev_encoder_(0.0),
                  current_encoder_(0.0),
-                 initial_encoder_(0.0),
                  imu_angular_z_(0.0),
                  initialized_(false)
     {
         counts_per_rev_ = 2880.0;
         wheel_radius_ = 0.033;
         // Originally, raw_scale = ((13.0*19.0)/(70.0*30.0)) ≈ 0.1176.
-        // Remove the extra 50% reduction and use raw_scale directly.
+        // Remove 50% reduction.
         double raw_scale = ((13.0 * 19.0) / (70.0 * 30.0));
         distance_per_count_ = raw_scale * (2 * M_PI * wheel_radius_) / counts_per_rev_;
 
@@ -85,18 +84,15 @@ private:
     {
         if(!msg->position.empty())
         {
-            // On the first callback, record the initial encoder value.
             if (!initialized_)
             {
-                initial_encoder_ = msg->position[0];
-                current_encoder_ = 0.0;
-                prev_encoder_ = 0.0;
+                current_encoder_ = msg->position[0];
+                prev_encoder_ = msg->position[0];
                 initialized_ = true;
             }
             else
             {
-                // Subtract the initial offset so the effective position starts at 0.
-                current_encoder_ = msg->position[0] - initial_encoder_;
+                current_encoder_ = msg->position[0];
             }
         }
     }
@@ -122,10 +118,6 @@ private:
         theta_ += imu_angular_z_ * dt;
         x_ += delta_distance * std::cos(theta_);
         y_ += delta_distance * std::sin(theta_);
-
-        // Compute measured speed in meters per second.
-        double joint_speed_measured = delta_counts / dt; // Example calculation for joint speed
-        double measured_speed = (joint_speed_measured / (720.0 * 4.0)) * ((13.0 * 19.0) / (70.0 * 30.0)) * (2.0 * M_PI) * 0.033;
 
         // Publish Odometry message.
         auto odom = nav_msgs::msg::Odometry();
@@ -179,7 +171,6 @@ private:
     // Odometry state
     double x_, y_, theta_;
     double prev_encoder_, current_encoder_;
-    double initial_encoder_;
     double imu_angular_z_;
 
     double counts_per_rev_;
