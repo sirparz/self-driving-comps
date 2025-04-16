@@ -11,14 +11,14 @@ find_package(cv_bridge REQUIRED)
 find_package(image_transport REQUIRED)
 find_package(OpenCV REQUIRED COMPONENTS highgui imgcodecs imgproc videoio)
 find_package(rclcpp REQUIRED)
-
 find_package(std_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(control_msgs REQUIRED)
 find_package(qcar2_interfaces REQUIRED)
-
+find_package(tf2 REQUIRED)
 find_package(tf2_ros REQUIRED)
+find_package(nav_msgs REQUIRED)
 
 # Need to define _NVIDIA macro since the Quanser SDK has different
 # functionalities depending on which platform it's being used.
@@ -34,12 +34,9 @@ endif()
 #target_link_libraries(qcar2_driver_interface -lquanser_communications)
 #ament_target_dependencies(qcar2_driver_interface rclcpp std_msgs geometry_msgs sensor_msgs control_msgs)
 
-
 add_executable(command src/command.cpp)
 target_link_libraries(command -lquanser_devices -lquanser_communications -lquanser_runtime -lquanser_common)
 ament_target_dependencies(command rclcpp geometry_msgs qcar2_interfaces)
-
-
 
 add_executable(qcar2_hardware src/qcar2_hardware.cpp)
 target_link_libraries(qcar2_hardware -lhil -lquanser_runtime -lquanser_common)
@@ -73,14 +70,20 @@ ament_target_dependencies(fixed_lidar_frame geometry_msgs rclcpp tf2_ros)
 add_executable(fixed_lidar_frame_virtual src/fixed_lidar_frame_virtual.cpp)
 ament_target_dependencies(fixed_lidar_frame_virtual geometry_msgs rclcpp tf2_ros)
 
-
 # nav2
 # nav2 -> qcar2
 add_executable(nav2_qcar2_converter src/nav2_qcar_command_convert.cpp)
 ament_target_dependencies(nav2_qcar2_converter rclcpp geometry_msgs qcar2_interfaces)
 
-
-
+# odom_node
+add_executable(odom_node src/odom_node.cpp)
+ament_target_dependencies(odom_node
+  rclcpp
+  sensor_msgs
+  nav_msgs
+  geometry_msgs
+  tf2
+  tf2_ros)
 
 # Install nodes
 #install(TARGETS qcar2_driver_interface
@@ -97,11 +100,13 @@ install(TARGETS lidar
 install(TARGETS csi
   DESTINATION lib/${PROJECT_NAME})
 
-
 install(TARGETS command
   DESTINATION lib/${PROJECT_NAME})
 
 install(TARGETS nav2_qcar2_converter
+  DESTINATION lib/${PROJECT_NAME})
+
+install(TARGETS odom_node
   DESTINATION lib/${PROJECT_NAME})
 
 # Install TF
@@ -135,7 +140,6 @@ install(
   DIRECTORY urdf
   DESTINATION share/${PROJECT_NAME}
 )
-
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
