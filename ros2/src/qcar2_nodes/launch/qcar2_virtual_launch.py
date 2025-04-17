@@ -41,7 +41,7 @@ def generate_launch_description():
     csi_front_node = Node(
             package='qcar2_nodes',
             executable='csi',
-            name='CSILeftCameras',
+            name='CSIFrontCameras',
             parameters=[{"device_type":"virtual"},
                         #{"frame_width":410},
                         #{"frame_height":205},
@@ -49,16 +49,16 @@ def generate_launch_description():
                         {"camera_num":3}]
         )
 
-    csi_right_node = Node(
-            package='qcar2_nodes',
-            executable='csi',
-            name='CSILeftCameras',
-            parameters=[{"device_type":"virtual"},
-                        #{"frame_width":410},
-                        #{"frame_height":205},
-                        #{"frame_rate":15.0},
-                        {"camera_num":0}]
-        )
+    # csi_right_node = Node(
+    #         package='qcar2_nodes',
+    #         executable='csi',
+    #         name='CSIRightCameras',
+    #         parameters=[{"device_type":"virtual"},
+    #                     #{"frame_width":410},
+    #                     #{"frame_height":205},
+    #                     #{"frame_rate":15.0},
+    #                     {"camera_num":0}]
+    #     )
     
     qcar2_hardware = Node(
             package='qcar2_nodes',
@@ -88,7 +88,7 @@ def generate_launch_description():
         lidar_node,
         realsense_camera_node,
         csi_front_node,
-        csi_right_node,
+        # csi_right_node,
         qcar2_hardware,
         fake_joint_publisher,
         robot_state_publisher,

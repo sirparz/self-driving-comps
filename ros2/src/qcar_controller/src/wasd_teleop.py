@@ -6,8 +6,8 @@ from qcar2_interfaces.msg import MotorCommands
 # test 
 # Key mappings
 MOVE_BINDINGS = {
-    'w': (0.0, 0.5),  # Forward
-    's': (0.0, -0.5), # Reverse
+    'w': (0.0, 0.2),  # Forward
+    's': (0.0, -0.2), # Reverse
     'a': (0.3, 0.25),  # Left turn
     'd': (-0.3, 0.25), # Right turn
     ' ': (0.0, 0.0),  # Stop
