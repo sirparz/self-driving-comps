@@ -9,7 +9,6 @@ class ICPTester:
         self.last_pcd = None
         self.current_transform = np.eye(4)
 
-        # ICP Configuration
         self.icp_config = {
             "max_correspondence_distance": 0.5,
             "estimation_method": o3d.pipelines.registration.TransformationEstimationPointToPlane(),
