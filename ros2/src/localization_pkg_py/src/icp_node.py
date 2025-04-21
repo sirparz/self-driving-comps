@@ -6,7 +6,8 @@ import sensor_msgs_py.point_cloud2 as pc2
 import numpy as np
 
 # ✅ Import your ICPTester from the module
-from icp_module import ICPTester  # <-- Change 'your_package_name' to match your actual package name
+from icp_module import ICPTester
+
 
 class ICPLocalizationNode(Node):
     def __init__(self):
@@ -19,7 +20,7 @@ class ICPLocalizationNode(Node):
             10
         )
 
-        self.icp = ICPTester(voxel_size=0.2)
+        self.icp = ICPTester(voxel_size=0.2, logger=self.get_logger())
         self.get_logger().info(" ICP Localization Node Started")
 
     def lidar_callback(self, msg):

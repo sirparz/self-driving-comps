@@ -18,6 +18,7 @@ install(
   PROGRAMS
     src/convert2pointcloud2.py
     src/icp_node.py
+    src/icp_module.py 
   DESTINATION lib/${PROJECT_NAME}
 )
 
