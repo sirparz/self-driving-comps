@@ -27,25 +27,25 @@ def generate_launch_description():
             parameters=[{"device_type":"virtual"}]
         )
     
-    realsense_camera_node = Node(
-            package='qcar2_nodes',
-            executable='rgbd',
-            name='RealsenseCamera',
-            parameters=[{"device_type":"virtual"},
-                        {"frame_width_rgb":640},
-                        {"frame_height_rgb":480},
-                        {"frame_width_depth":640},
-                        {"frame_height_depth":480}]
-        )
+    # realsense_camera_node = Node(
+    #         package='qcar2_nodes',
+    #         executable='rgbd',
+    #         name='RealsenseCamera',
+    #         parameters=[{"device_type":"virtual"},
+    #                     {"frame_width_rgb":640},
+    #                     {"frame_height_rgb":480},
+    #                     {"frame_width_depth":640},
+    #                     {"frame_height_depth":480}]
+    #     )
 
     csi_front_node = Node(
             package='qcar2_nodes',
             executable='csi',
             name='CSIFrontCameras',
             parameters=[{"device_type":"virtual"},
-                        #{"frame_width":410},
-                        #{"frame_height":205},
-                        #{"frame_rate":15.0},
+                        # {"frame_width":820},
+                        # {"frame_height":616},
+                        # {"frame_rate":15.0},
                         {"camera_num":3}]
         )
 
@@ -86,7 +86,7 @@ def generate_launch_description():
      
     return LaunchDescription([
         lidar_node,
-        realsense_camera_node,
+        # realsense_camera_node,
         csi_front_node,
         # csi_right_node,
         qcar2_hardware,
